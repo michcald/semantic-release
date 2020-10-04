@@ -1,0 +1,22 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name:  Build and Push
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
+    steps:
+      - name: Repo Checkout
+        uses: actions/checkout@v2
+      - name: Dockerhub login
+        run: docker login --username=${DOCKERHUB_USERNAME} --password=${DOCKERHUB_PASSWORD}
+      - name: Build and Push
+        run: make
+      - name: Dockerhub logout
+        run: docker logout
